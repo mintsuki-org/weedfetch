@@ -62,6 +62,7 @@ while true; do
 		rxvt) wf_term="rxvt";break;;
 		st) wf_term="st";break;;
 		konsole) wf_term="Konsole";break;;
+		urxvt) wf_term="urxvt";break;;
 	esac
 	if [ $cur_pid = 1 ]; then
 		if [ $wf_warnings = y ]; then
