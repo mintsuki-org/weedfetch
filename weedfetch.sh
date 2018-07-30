@@ -34,6 +34,8 @@ elif [ $wf_os = "OpenBSD" ]; then
 	wf_packages="$(pkg_info -A | wc -l | sed -e 's/^[ \t]*//') (pkg_info)"
 elif [ $wf_os = "Void" ]; then
 	wf_packages="$(xbps-query -l | wc -l) (xbps)"
+elif [ $wf_os = "ManjaroLinux" ]; then
+        wf_packages="$(pacman -Q | wc -l) (pacman)"
 fi
 
 wf_shell="$(basename $SHELL)"
@@ -50,6 +52,7 @@ while true; do
 		xterm) wf_term="xterm";break;;
 		rxvt) wf_term="rxvt";break;;
 		st) wf_term="st";break;;
+		konsole) wf_term="Konsole";break;;
 	esac
 	if [ $cur_pid = 1 ]; then
 		if [ $wf_warnings = y ]; then
