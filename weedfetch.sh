@@ -1,10 +1,10 @@
 #!/bin/sh
 
-wf_warnings=y
+wf_warnings="YES"
 
 while getopts ":w" opt; do
 	case "$opt" in
-		w) wf_warnings=n;;
+		w) wf_warnings="NO";;
 		\?) echo "invalid paramter: -$OPTARG" >&2
 			exit;;
 	esac
@@ -34,6 +34,8 @@ elif [ $wf_os = "OpenBSD" ]; then
 	wf_packages="$(pkg_info -A | wc -l | sed -e 's/^[ \t]*//') (pkg_info)"
 elif [ $wf_os = "Void" ]; then
 	wf_packages="$(xbps-query -l | wc -l) (xbps)"
+elif [ $wf_os = "ManjaroLinux" ]; then
+        wf_packages="$(pacman -Q | wc -l) (pacman)"
 fi
 
 wf_shell="$(basename $SHELL)"
@@ -50,9 +52,10 @@ while true; do
 		xterm) wf_term="xterm";break;;
 		rxvt) wf_term="rxvt";break;;
 		st) wf_term="st";break;;
+		konsole) wf_term="Konsole";break;;
 	esac
 	if [ $cur_pid = 1 ]; then
-		if [ $wf_warnings = y ]; then
+		if [[ $wf_warnings == "YES" ]]; then
 			printf "Warning: Couldn't detect terminal emulator.\n" >&2
 			printf "         Set the WF_TERM variable to manually specify it.\n" >&2
 			printf "         (If you add support for this terminal and send a PR, that'd be great)\n" >&2
@@ -73,10 +76,12 @@ for i in $process_list; do
 		fvwm) wf_wm="fvwm";break;;
 		fvwm95) wf_wm="fvwm95";break;;
 		araiwm) wf_wm="araiwm";break;;
+                startkde) wf_wm="kde";break;;
+                kwin_x11) wf_wm="kwin";break;;
 	esac
 done
-if [ $wf_wm = "" ]; then
-	if [ $wf_warnings = y ]; then
+if [[ $wf_wm == "" ]]; then
+	if [[ $wf_warnings == "YES" ]]; then
 		printf "Warning: Couldn't detect WM.\n" >&2
 		printf "         Set the WF_WM variable to manually specify it.\n" >&2
 		printf "         (If you add support for this WM and send a PR, that'd be great)\n" >&2
@@ -89,10 +94,10 @@ fi
 bc="$(tput bold)"
 rc="$(tput sgr0)"
 
-echo ${rc} '     \      ,  ' ${bc} " $USER@$wf_host"
+echo ${rc} '     \      ,  ' ${bc} "$USER@$wf_host"
 echo ${rc} '     l\   ,/   ' ${bc} OS:       $wf_os $wf_osver
 echo ${rc} '._   `|] /j    ' ${bc} UPTIME:   $wf_uptime
-echo ${rc} ' `\\\\, \|f7 _,/'"'" ${bc} PACK:     $wf_packages
+echo ${rc} ' `\\\\, \|f7 _,/'"'"${bc}PACK:     $wf_packages
 echo ${rc} '   "`=,k/,x-'"'"'  ' ${bc} TERM:     $wf_term
 echo ${rc} '    ,z/fY-=-   ' ${bc} SHELL:    $wf_shell
 echo ${rc} "  -'"'" .y \     ' ${bc} WM/DE:    $wf_wm
