@@ -96,7 +96,7 @@ for i in $process_list; do
 	case $i in
 		xfce4-session) wf_wm="xfce4";break;;
 		xfwm4) wf_wm="xfwm4";break;;
-		i3wm) wf_wm="i3wm";break;;
+		i3) wf_wm="i3wm";break;;
 		fvwm) wf_wm="fvwm";break;;
 		fvwm95) wf_wm="fvwm95";break;;
 		araiwm) wf_wm="araiwm";break;;
