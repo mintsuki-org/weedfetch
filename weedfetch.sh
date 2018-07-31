@@ -33,7 +33,7 @@ wf_uptime="$(uptime | awk -F, '{sub(".*up ",x,$1);print $1}' | sed -e 's/^[ \t]*
 if [ $wf_os = "Debian" ]; then
 	wf_packages="$(dpkg -l | grep -c '^ii') (dpkg)"
 elif [ $wf_os = "Ubuntu" ]; then
-    wf_packages="$(dpkg -l | grep -c '^ii') (dpkg)"
+	wf_packages="$(dpkg -l | grep -c '^ii') (dpkg)"
 elif [ $wf_os = "OpenBSD" ]; then
 	wf_packages="$(pkg_info -A | wc -l | sed -e 's/^[ \t]*//') (pkg_info)"
 elif [ $wf_os = "VoidLinux" ]; then
@@ -71,8 +71,6 @@ while true; do
 		st) wf_term="st";break;;
 		konsole) wf_term="Konsole";break;;
 		urxvt) wf_term="urxvt";break;;
-		dwm) wf_term="dwm";break;;
-		awesome) wf_term="awesome";break;;
 	esac
 	if [ $cur_pid = 1 ]; then
 		if [ $wf_warnings = y ]; then
@@ -104,6 +102,8 @@ for i in $process_list; do
 		fvwm) wf_wm="fvwm";break;;
 		fvwm95) wf_wm="fvwm95";break;;
 		araiwm) wf_wm="araiwm";break;;
+		dwm) wf_wm="dwm";break;;
+		awesome) wf_wm="awesome";break;;
 	esac
 done
 if [ -z $wf_wm ]; then
