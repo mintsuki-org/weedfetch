@@ -32,6 +32,8 @@ wf_uptime="$(uptime | awk -F, '{sub(".*up ",x,$1);print $1}' | sed -e 's/^[ \t]*
 
 if [ $wf_os = "Debian" ]; then
 	wf_packages="$(dpkg -l | grep -c '^ii') (dpkg)"
+elif [ $wf_os = "Ubuntu" ]; then
+    wf_packages="$(dpkg -l | grep -c '^ii') (dpkg)"
 elif [ $wf_os = "OpenBSD" ]; then
 	wf_packages="$(pkg_info -A | wc -l | sed -e 's/^[ \t]*//') (pkg_info)"
 elif [ $wf_os = "VoidLinux" ]; then
