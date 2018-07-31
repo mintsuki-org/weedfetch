@@ -43,7 +43,11 @@ else
 		printf "         (If you add support for this OS/distro and send a PR, that'd be great)\n" >&2
 		printf "         Suppress this warning with -w.\n\n" >&2
 	fi
-	wf_packages=$WF_PACKAGES
+	if [ -z $WF_PACKAGES ]; then
+		wf_packages="Unknown"
+	else
+		wf_packages=$WF_PACKAGES
+	fi
 	break
 fi
 
@@ -71,7 +75,11 @@ while true; do
 			printf "         (If you add support for this terminal and send a PR, that'd be great)\n" >&2
 			printf "         Suppress this warning with -w.\n\n" >&2
 		fi
-		wf_term=$WF_TERM
+		if [ -z $WF_TERM ]; then
+			wf_term="Unknown"
+		else
+			wf_term=$WF_TERM
+		fi
 		break
 	fi
 done
@@ -95,18 +103,23 @@ if [ -z $wf_wm ]; then
 		printf "         (If you add support for this WM and send a PR, that'd be great)\n" >&2
 		printf "         Suppress this warning with -w.\n\n" >&2
 	fi
-	wf_wm=$WF_WM
+	if [ -z $WF_WM ]; then
+		wf_wm="Unknown"
+	else
+		wf_wm=$WF_WM
+	fi
 	break
 fi
 
-bc="$(tput bold)"
-rc="$(tput sgr0)"
+sh_green="\e[0;32m"
+sh_reset="\e[0m"
+sh_bold="\e[0;1m"
 
-echo ${rc} '     \      ,  ' ${bc} " $USER@$wf_host"
-echo ${rc} '     l\   ,/   ' ${bc} OS:       $wf_os $wf_osver
-echo ${rc} '._   `|] /j    ' ${bc} UPTIME:   $wf_uptime
-echo ${rc} ' `\\\\, \|f7 _,/'"'" ${bc} PACK:     $wf_packages
-echo ${rc} '   "`=,k/,x-'"'"'  ' ${bc} TERM:     $wf_term
-echo ${rc} '    ,z/fY-=-   ' ${bc} SHELL:    $wf_shell
-echo ${rc} "  -'"'" .y \     ' ${bc} WM/DE:    $wf_wm
-echo ${rc} "      '   \itz " ${bc} MEM:       $wf_usedmem / $wf_totalmem
+echo $sh_green '     \      ,  ' $sh_bold " $USER@$wf_host"
+echo $sh_green '     l\   ,/   ' $sh_bold OS:$sh_reset $wf_os $wf_osver
+echo $sh_green '._   `|] /j    ' $sh_bold UPTIME:$sh_reset $wf_uptime
+echo $sh_green ' `\\\\, \|f7 _,/'"'" $sh_bold PACK:$sh_reset $wf_packages
+echo $sh_green '   "`=,k/,x-'"'"'  ' $sh_bold TERM:$sh_reset $wf_term
+echo $sh_green '    ,z/fY-=-   ' $sh_bold SHELL:$sh_reset $wf_shell
+echo $sh_green "  -'"'" .y \     ' $sh_bold WM/DE:$sh_reset $wf_wm
+echo $sh_green "      '   \itz " $sh_bold MEM:$sh_reset $wf_usedmem / $wf_totalmem
