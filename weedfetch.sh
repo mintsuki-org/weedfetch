@@ -117,9 +117,9 @@ if [ -z $wf_wm ]; then
 	break
 fi
 
-sh_green="\e[0;32m"
-sh_reset="\e[0m"
-sh_bold="\e[0;1m"
+sh_green="$(tput sgr0)$(tput setaf 2)"
+sh_reset="$(tput sgr0)"
+sh_bold="$(tput sgr0)$(tput bold)"
 
 echo $sh_green '     \      ,  ' $sh_bold " $USER@$wf_host"
 echo $sh_green '     l\   ,/   ' $sh_bold OS:$sh_reset $wf_os $wf_osver
