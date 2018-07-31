@@ -25,6 +25,8 @@ else
 	wf_osver=$(uname -r)
 fi
 
+WF_OS=$(uname -s)
+
 wf_host="$(hostname)"
 wf_uptime="$(uptime | awk -F, '{sub(".*up ",x,$1);print $1}' | sed -e 's/^[ \t]*//')"
 
@@ -76,7 +78,11 @@ while true; do
 			printf "         Suppress this warning with -w.\n\n" >&2
 		fi
 		if [ -z $WF_TERM ]; then
-			wf_term="Unknown"
+			if [ $WF_OS = "Linux" ]; then
+				wf_term="$(ls -l /proc/$$/fd/0 | awk '{ print $11 }')"
+			else
+				wf_term="Unknown"
+			fi
 		else
 			wf_term=$WF_TERM
 		fi
@@ -123,3 +129,4 @@ echo $sh_green '   "`=,k/,x-'"'"'  ' $sh_bold TERM:$sh_reset $wf_term
 echo $sh_green '    ,z/fY-=-   ' $sh_bold SHELL:$sh_reset $wf_shell
 echo $sh_green "  -'"'" .y \     ' $sh_bold WM/DE:$sh_reset $wf_wm
 echo $sh_green "      '   \itz " $sh_bold MEM:$sh_reset $wf_usedmem / $wf_totalmem
+echo ""
