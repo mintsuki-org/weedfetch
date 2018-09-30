@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# lol weed
 wf_warnings=y
 
 while getopts ":w" opt; do
