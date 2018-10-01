@@ -99,10 +99,12 @@ for i in $process_list; do
 		xfce4-session) wf_wm="xfce4";break;;
 		xfwm4) wf_wm="xfwm4";break;;
 		i3) wf_wm="i3wm";break;;
+		*cwm) wf_wm="cwm";break;;
 		fvwm) wf_wm="fvwm";break;;
 		fvwm95) wf_wm="fvwm95";break;;
 		araiwm) wf_wm="araiwm";break;;
 		dwm) wf_wm="dwm";break;;
+		herbstluftwm) wf_wm="herbstluftwm";break;;
 		awesome) wf_wm="awesome";break;;
 	esac
 done
