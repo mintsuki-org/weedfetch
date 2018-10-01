@@ -25,14 +25,18 @@ else
 	wf_osver=$(uname -r)
 fi
 
+WF_OS=$(uname -s)
+
 wf_host="$(hostname)"
 wf_uptime="$(uptime | awk -F, '{sub(".*up ",x,$1);print $1}' | sed -e 's/^[ \t]*//')"
 
 if [ $wf_os = "Debian" ]; then
 	wf_packages="$(dpkg -l | grep -c '^ii') (dpkg)"
+elif [ $wf_os = "Ubuntu" ]; then
+	wf_packages="$(dpkg -l | grep -c '^ii') (dpkg)"
 elif [ $wf_os = "OpenBSD" ]; then
 	wf_packages="$(pkg_info -A | wc -l | sed -e 's/^[ \t]*//') (pkg_info)"
-elif [ $wf_os = "Void" ]; then
+elif [ $wf_os = "VoidLinux" ]; then
 	wf_packages="$(xbps-query -l | wc -l) (xbps)"
 elif [ $wf_os = "ManjaroLinux" ]; then
 	wf_packages="$(pacman -Q | wc -l) (pacman)"
@@ -76,7 +80,11 @@ while true; do
 			printf "         Suppress this warning with -w.\n\n" >&2
 		fi
 		if [ -z $WF_TERM ]; then
-			wf_term="Unknown"
+			if [ $WF_OS = "Linux" ]; then
+				wf_term="$(ls -l /proc/$$/fd/0 | awk '{ print $11 }')"
+			else
+				wf_term="Unknown"
+			fi
 		else
 			wf_term=$WF_TERM
 		fi
@@ -90,10 +98,12 @@ for i in $process_list; do
 	case $i in
 		xfce4-session) wf_wm="xfce4";break;;
 		xfwm4) wf_wm="xfwm4";break;;
-		i3wm) wf_wm="i3wm";break;;
+		i3) wf_wm="i3wm";break;;
 		fvwm) wf_wm="fvwm";break;;
 		fvwm95) wf_wm="fvwm95";break;;
 		araiwm) wf_wm="araiwm";break;;
+		dwm) wf_wm="dwm";break;;
+		awesome) wf_wm="awesome";break;;
 	esac
 done
 if [ -z $wf_wm ]; then
@@ -111,9 +121,9 @@ if [ -z $wf_wm ]; then
 	break
 fi
 
-sh_green="\e[0;32m"
-sh_reset="\e[0m"
-sh_bold="\e[0;1m"
+sh_green="$(tput sgr0)$(tput setaf 2)"
+sh_reset="$(tput sgr0)"
+sh_bold="$(tput sgr0)$(tput bold)"
 
 echo $sh_green '     \      ,  ' $sh_bold " $USER@$wf_host"
 echo $sh_green '     l\   ,/   ' $sh_bold OS:$sh_reset $wf_os $wf_osver
@@ -123,3 +133,4 @@ echo $sh_green '   "`=,k/,x-'"'"'  ' $sh_bold TERM:$sh_reset $wf_term
 echo $sh_green '    ,z/fY-=-   ' $sh_bold SHELL:$sh_reset $wf_shell
 echo $sh_green "  -'"'" .y \     ' $sh_bold WM/DE:$sh_reset $wf_wm
 echo $sh_green "      '   \itz " $sh_bold MEM:$sh_reset $wf_usedmem / $wf_totalmem
+echo ""
