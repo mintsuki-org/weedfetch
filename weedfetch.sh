@@ -20,6 +20,10 @@ elif [ -f /etc/lsb-release ]; then
 elif [ -f /etc/debian_version ]; then
 	wf_os=Debian
 	wf_osver=$(cat /etc/debian_version)
+elif [ -f /etc/os-release ]; then
+        . /etc/os-release
+        wf_os=$NAME
+        wf_osver=$VERSION
 else
 	wf_os=$(uname -s)
 	wf_osver=$(uname -r)
