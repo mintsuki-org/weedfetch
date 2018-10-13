@@ -93,21 +93,33 @@ while true; do
 done
 
 wf_wm=""
-process_list=$(ps -A -o comm)
-for i in $process_list; do
-	case $i in
-		xfce4-session) wf_wm="xfce4";break;;
-		xfwm4) wf_wm="xfwm4";break;;
-		i3) wf_wm="i3wm";break;;
-		*cwm) wf_wm="cwm";break;;
-		fvwm) wf_wm="fvwm";break;;
-		fvwm95) wf_wm="fvwm95";break;;
-		araiwm) wf_wm="araiwm";break;;
-		dwm) wf_wm="dwm";break;;
-		herbstluftwm) wf_wm="herbstluftwm";break;;
-		awesome) wf_wm="awesome";break;;
-	esac
-done
+
+# Support for all (most) EWMH-compliant window managers
+which_xprop="$(which xprop)"
+if [ -x $which_xprop ]; then
+    rootwin="$(xprop -root -notype _NET_SUPPORTING_WM_CHECK | awk '{print $5}')"
+    ewmhwinprops="$(xprop -id "$rootwin" -notype -len 100 -f _NET_WM_NAME 8t)"
+    wf_wm="$(echo "$ewmhwinprops" | grep '_NET_WM_NAME' |\
+        sed -E 's/_NET_WM_NAME\s=\s"(.*)"/\1/')"
+else
+        process_list=$(ps -A -o comm)
+        for i in $process_list; do
+	        case $i in
+        		xfce4-session) wf_wm="xfce4";break;;
+		        xfwm4) wf_wm="xfwm4";break;;
+	        	i3) wf_wm="i3wm";break;;
+        		*cwm) wf_wm="cwm";break;;
+	        	fvwm) wf_wm="fvwm";break;;
+        		fvwm95) wf_wm="fvwm95";break;;
+		        araiwm) wf_wm="araiwm";break;;
+	        	dwm) wf_wm="dwm";break;;
+        		herbstluftwm) wf_wm="herbstluftwm";break;;
+		        awesome) wf_wm="awesome";break;;
+                        custard) wf_wm"custard";break;;
+        	esac
+        done
+fi
+
 if [ -z $wf_wm ]; then
 	if [ $wf_warnings = y ]; then
 		printf "Warning: Couldn't detect WM.\n" >&2
