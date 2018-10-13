@@ -64,37 +64,22 @@ wf_shell="$(basename $SHELL)"
 wf_totalmem="$(free -m | awk 'NR==2 { print $2 }')MiB"
 wf_usedmem="$(free -m | awk 'NR==2 { print $3 }')MiB"
 
-cur_pid=$$
-while true; do
-	cur_pid=$(ps -h -o ppid -p $cur_pid 2>/dev/null)
-	case $(ps -h -o comm -p $cur_pid 2>/dev/null) in
-		gnome-terminal) wf_term="GNOME Terminal";break;;
-		xfce4-terminal) wf_term="xfce4 Terminal";break;;
-		xterm) wf_term="xterm";break;;
-		rxvt) wf_term="rxvt";break;;
-		st) wf_term="st";break;;
-		konsole) wf_term="Konsole";break;;
-		urxvt) wf_term="urxvt";break;;
-	esac
-	if [ $cur_pid = 1 ]; then
-		if [ $wf_warnings = y ]; then
-			printf "Warning: Couldn't detect terminal emulator.\n" >&2
-			printf "         Set the WF_TERM variable to manually specify it.\n" >&2
-			printf "         (If you add support for this terminal and send a PR, that'd be great)\n" >&2
-			printf "         Suppress this warning with -w.\n\n" >&2
-		fi
-		if [ -z $WF_TERM ]; then
-			if [ $WF_OS = "Linux" ]; then
-				wf_term="$(ls -l /proc/$$/fd/0 | awk '{ print $11 }')"
-			else
-				wf_term="Unknown"
-			fi
-		else
-			wf_term=$WF_TERM
-		fi
-		break
-	fi
-done
+wf_term=$TERM
+
+case $TERM in
+    st-*color) wf_term="st";break;;
+    xterm-*color) wf_term="xterm";break;;
+    konsole-*color) wf_term="Konsole";break;;
+    Linux) wf_term="$(ls -l /proc/$$/fd/0 | awk '{print $11}')";break;;
+    *)
+        if [ $wf_warnings = y ]; then
+            printf "Warning: Couldn't detect terminal emulator.\n" >&2
+            printf "        Set the WF_TERM variable to manually specify it.\n" >&2
+            printf "        (If you add support for this terminal and send a PR, that'd be great)\n" >&2
+            printf "        Suppress this warning with -w.\n\n" >&2
+        fi
+        break;;
+esac
 
 wf_wm=""
 
