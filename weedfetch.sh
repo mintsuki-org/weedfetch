@@ -106,6 +106,7 @@ for i in $process_list; do
 		dwm) wf_wm="dwm";break;;
 		herbstluftwm) wf_wm="herbstluftwm";break;;
 		awesome) wf_wm="awesome";break;;
+		windowchef) wf_wm="windowchef";break;;
 	esac
 done
 if [ -z $wf_wm ]; then
